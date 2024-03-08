@@ -59,4 +59,9 @@ class Queries::Projects::Selects::CustomField < Queries::Selects::Base
   def available?
     custom_field.present?
   end
+
+  def scope
+    Project
+      .includes(:custom_values)
+  end
 end
