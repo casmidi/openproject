@@ -1,0 +1,17 @@
+<%=
+  component_wrapper do
+    flex_layout(mt: 3) do |details_container|
+      details_container.with_row do
+        render(Primer::Beta::Heading.new(tag: :h4)) { t(:label_group_plural) }
+      end
+
+      details_container.with_row(mt: 2) do
+        helpers.content_tag(:ul) do
+          @groups.each do |group|
+            concat helpers.content_tag(:li, helpers.link_to_group(group))
+          end
+        end
+      end
+    end
+  end
+%>

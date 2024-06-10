@@ -1,0 +1,29 @@
+<%=
+  component_wrapper do
+    flex_layout(mt: 3) do |details_container|
+      details_container.with_row do
+        render(Primer::Beta::Heading.new(tag: :h4)) { t(:label_information) }
+      end
+
+      details_container.with_row(mt: 2) do
+        helpers.content_tag(:ul) do
+          if @user.pref.can_expose_mail?
+            concat helpers.content_tag(:li) do
+              concat User.human_attribute_name(:mail)
+              concat mail_to(escape_javascript(@user.mail), nil, encode: 'javascript')
+            end
+          end
+
+          @user.visible_custom_field_values.each do |custom_value|
+            if custom_value.value.present?
+              concat helpers.content_tag(
+                :li,
+                "#{custom_value.custom_field.name}: #{custom_value.formatted_value}"
+              )
+            end
+          end
+        end
+      end
+    end
+  end
+%>
