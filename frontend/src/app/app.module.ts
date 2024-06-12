@@ -164,6 +164,9 @@ import {
   ReminderSettingsPageComponent,
 } from 'core-app/features/user-preferences/reminder-settings/page/reminder-settings-page.component';
 import { OpenProjectMyAccountModule } from 'core-app/features/user-preferences/user-preferences.module';
+import {
+  InAppNotificationCenterComponent,
+} from 'core-app/features/in-app-notifications/center/in-app-notification-center.component';
 
 export function initializeServices(injector:Injector) {
   return () => {
@@ -358,5 +361,6 @@ export class OpenProjectModule {
     registerCustomElement('opce-display-job-status-page', DisplayJobPageComponent, { injector });
     registerCustomElement('opce-notification-settings', NotificationsSettingsPageComponent, { injector });
     registerCustomElement('opce-reminder-settings', ReminderSettingsPageComponent, { injector });
+    registerCustomElement('opce-notification-center', InAppNotificationCenterComponent, { injector });
   }
 }

@@ -685,8 +685,12 @@ Rails.application.routes.draw do
 
   root to: "account#login"
 
-  scope :notifications do
-    get "(/*state)", to: "angular#notifications_layout", as: :notifications_center
+  concern :with_split_view do |options|
+    get "details/:id(/:tab)", on: :collection, action: options.fetch(:action, :index)
+  end
+
+  resources :notifications, only: :index do
+    concerns :with_split_view
   end
 
   # OAuthClient needs a "callback" URL that Nextcloud calls with a "code" (see OAuth2 RFC)

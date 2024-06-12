@@ -39,12 +39,7 @@ import {
   take,
   tap,
 } from 'rxjs/operators';
-import {
-  forkJoin,
-  from,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { forkJoin, from, Observable, Subject } from 'rxjs';
 import { ID, Query } from '@datorama/akita';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateService } from '@uirouter/angular';
@@ -67,7 +62,6 @@ import {
   InAppNotificationsResourceService,
 } from 'core-app/core/state/in-app-notifications/in-app-notifications.service';
 import { mapHALCollectionToIDCollection } from 'core-app/core/state/resource-store';
-import { INotificationPageQueryParameters } from 'core-app/features/in-app-notifications/in-app-notifications.routes';
 import {
   IAN_FACET_FILTERS,
   IanCenterStore,
@@ -78,7 +72,12 @@ import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import { DeviceService } from 'core-app/core/browser/device.service';
 import { ApiV3ListFilter, ApiV3ListParameters } from 'core-app/core/apiv3/paths/apiv3-list-resource.interface';
 
-@Injectable()
+export interface INotificationPageQueryParameters {
+  filter?:string;
+  name?:string;
+}
+
+@Injectable({ providedIn: 'root' })
 @EffectHandler
 export class IanCenterService extends UntilDestroyedMixin {
   readonly id = 'ian-center';

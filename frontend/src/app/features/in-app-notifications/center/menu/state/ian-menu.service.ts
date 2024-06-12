@@ -1,34 +1,23 @@
-import {
-  Injectable,
-  Injector,
-} from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import {
   notificationCountIncreased,
   notificationsMarkedRead,
 } from 'core-app/core/state/in-app-notifications/in-app-notifications.actions';
-import {
-  EffectCallback,
-  EffectHandler,
-} from 'core-app/core/state/effects/effect-handler.decorator';
+import { EffectCallback, EffectHandler } from 'core-app/core/state/effects/effect-handler.decorator';
 import { ActionsService } from 'core-app/core/state/actions/actions.service';
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import { ApiV3ListParameters } from 'core-app/core/apiv3/paths/apiv3-list-resource.interface';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
-import { InAppNotificationsResourceService } from 'core-app/core/state/in-app-notifications/in-app-notifications.service';
+import {
+  InAppNotificationsResourceService,
+} from 'core-app/core/state/in-app-notifications/in-app-notifications.service';
 import { ProjectsResourceService } from 'core-app/core/state/projects/projects.service';
-import {
-  IAN_MENU_PROJECT_FILTERS,
-  IAN_MENU_REASON_FILTERS,
-  IanMenuStore,
-} from './ian-menu.store';
+import { IAN_MENU_PROJECT_FILTERS, IAN_MENU_REASON_FILTERS, IanMenuStore } from './ian-menu.store';
 import { Query } from '@datorama/akita';
-import {
-  map,
-  switchMap,
-} from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @EffectHandler
 export class IanMenuService {
   readonly id = 'ian-center';

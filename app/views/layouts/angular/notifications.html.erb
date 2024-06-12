@@ -29,7 +29,7 @@ See docs/COPYRIGHT.rdoc for more details.
 
 <% write_augur_to_gon %>
 <%= content_for :content_body do %>
-  <openproject-base></openproject-base>
+  <%= angular_component_tag "opce-notification-center" %>
 <% end -%>
 
 <%= render template: "layouts/base", locals: local_assigns.merge({ menu_name: :notifications_menu }) %>

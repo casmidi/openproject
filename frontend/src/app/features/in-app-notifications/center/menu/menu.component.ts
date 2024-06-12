@@ -26,22 +26,18 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  HostBinding,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnInit } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { StateService } from '@uirouter/core';
 import idFromLink from 'core-app/features/hal/helpers/id-from-link';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
-import { INotificationPageQueryParameters } from '../../in-app-notifications.routes';
 import { IanMenuService } from './state/ian-menu.service';
 import { BannersService } from 'core-app/core/enterprise/banners.service';
 import { ConfigurationService } from 'core-app/core/config/configuration.service';
+import {
+  INotificationPageQueryParameters,
+} from 'core-app/features/in-app-notifications/center/state/ian-center.service';
 
 export const ianMenuSelector = 'op-ian-menu';
 
