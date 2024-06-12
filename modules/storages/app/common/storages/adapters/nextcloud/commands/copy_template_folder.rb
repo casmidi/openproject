@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) 2012-2024 the OpenProject GmbH
@@ -27,11 +29,12 @@
 #++
 
 module Storages
-  module Peripherals
-    module StorageInteraction
-      module Nextcloud
-        class CopyTemplateFolderCommand
-          using ServiceResultRefinements
+  module Adapters
+    module Nextcloud
+      module Commands
+        class CopyTemplateFolder
+          using Peripherals::ServiceResultRefinements
+          Util = Peripherals::StorageInteraction::Nextcloud::Util
 
           def self.call(storage:, source_path:, destination_path:)
             new(storage).call(source_path:, destination_path:)
@@ -42,6 +45,7 @@ module Storages
             @data = ResultData::CopyTemplateFolder.new(id: nil, polling_url: nil, requires_polling: false)
           end
 
+          # rubocop:disable Metrics/AbcSize
           def call(source_path:, destination_path:)
             valid_input_result = validate_inputs(source_path, destination_path).on_failure { |failure| return failure }
 
@@ -56,6 +60,7 @@ module Storages
                 .success(result: @data.with(id: command_result.result[destination_path]["fileid"]))
             end
           end
+          # rubocop:enable Metrics/AbcSize
 
           private
 
@@ -123,7 +128,7 @@ module Storages
           end
 
           def get_folder_id(destination_path)
-            Registry
+            Peripherals::Registry
               .resolve("#{@storage.short_provider_type}.queries.file_ids")
               .call(storage: @storage, path: destination_path)
           end

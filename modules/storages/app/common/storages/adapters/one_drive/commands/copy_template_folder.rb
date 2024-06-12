@@ -29,10 +29,10 @@
 #++
 
 module Storages
-  module Peripherals
-    module StorageInteraction
-      module OneDrive
-        class CopyTemplateFolderCommand
+  module Adapters
+    module OneDrive
+      module Commands
+        class CopyTemplateFolder
           def self.call(storage:, source_path:, destination_path:)
             if source_path.blank? || destination_path.blank?
               return ServiceResult.failure(
@@ -51,7 +51,7 @@ module Storages
           end
 
           def call(source_location:, destination_name:)
-            Util.using_admin_token(@storage) do |httpx|
+            Peripherals::StorageInteraction::OneDrive::Util.using_admin_token(@storage) do |httpx|
               handle_response(
                 httpx.post(copy_path_for(source_location), json: { name: destination_name })
               )
