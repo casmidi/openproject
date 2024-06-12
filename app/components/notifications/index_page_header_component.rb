@@ -1,6 +1,8 @@
-#-- copyright
+# frozen_string_literal: true
+
+# -- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2012-2024 the OpenProject GmbH
+# Copyright (C) 2010-2024 the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -24,15 +26,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-class NotificationsController < ApplicationController
-  before_action :require_login
-  no_authorization_required! :index
+module Notifications
+  class IndexPageHeaderComponent < ApplicationComponent
+    include ApplicationHelper
 
-  def index
-    # Frontend will handle rendering
-    # but we will need to render with notification specific layout
-    render layout: "angular/notifications"
+    def initialize(project: nil)
+      super
+      @project = project
+    end
+
+    def page_title
+      I18n.t("js.notifications.title")
+    end
+
+    def breadcrumb_items
+      [page_title]
+    end
   end
 end

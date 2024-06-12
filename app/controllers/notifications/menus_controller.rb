@@ -1,6 +1,6 @@
-#-- copyright
+# -- copyright
 # OpenProject is an open source project management software.
-# Copyright (C) 2012-2024 the OpenProject GmbH
+# Copyright (C) 2010-2023 the OpenProject GmbH
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -24,15 +24,19 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
+module Notifications
+  class MenusController < ApplicationController
+    # No authorize as every user (or logged in user)
+    # is allowed to see the menu.
+    no_authorization_required! :show
 
-class NotificationsController < ApplicationController
-  before_action :require_login
-  no_authorization_required! :index
+    def show
+      menu = Menus::Notifications.new(controller_path: params[:controller_path], params:, current_user:)
 
-  def index
-    # Frontend will handle rendering
-    # but we will need to render with notification specific layout
-    render layout: "angular/notifications"
+      @sidebar_menu_items = menu.first_level_menu_items
+
+      render layout: nil
+    end
   end
 end

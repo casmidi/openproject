@@ -31,6 +31,16 @@
 module OpenProject
   module Menu
     MenuGroup = Data.define(:header, :children)
-    MenuItem = Data.define(:title, :href, :selected)
+
+    class MenuItem
+      attr_reader :icon, :title, :href, :selected
+
+      def initialize(title:, href:, selected:, icon: :nil)
+        @title = title
+        @href = href
+        @selected = selected
+        @icon = icon
+      end
+    end
   end
 end

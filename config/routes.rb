@@ -691,6 +691,10 @@ Rails.application.routes.draw do
 
   resources :notifications, only: :index do
     concerns :with_split_view
+
+    collection do
+      resource :menu, module: :notifications, only: %i[show], as: :notifications_menu
+    end
   end
 
   # OAuthClient needs a "callback" URL that Nextcloud calls with a "code" (see OAuth2 RFC)
