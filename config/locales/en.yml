@@ -1871,6 +1871,11 @@ Project attributes and sections are defined in the <a href=%{admin_settings_url}
         unknown_storage: "Unknown storage"
 
   notifications:
+    facets:
+      unread: "Unread"
+      unread_title: "Show unread"
+      all: "All"
+      all_title: "Show all"
     menu:
       by_project: "Unread by project"
       by_reason: "Reason"
