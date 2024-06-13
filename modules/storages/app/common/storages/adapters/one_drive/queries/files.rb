@@ -29,14 +29,15 @@
 #++
 
 module Storages
-  module Peripherals
-    module StorageInteraction
-      module OneDrive
-        class FilesQuery
+  module Adapters
+    module OneDrive
+      module Queries
+        class Files
           FIELDS = "?$select=id,name,size,webUrl,lastModifiedBy,createdBy,fileSystemInfo,file,folder,parentReference"
           Auth = ::Storages::Peripherals::StorageInteraction::Authentication
+          Util = Peripherals::StorageInteraction::OneDrive::Util
 
-          using ServiceResultRefinements
+          using Peripherals::ServiceResultRefinements
 
           def self.call(storage:, auth_strategy:, folder:)
             new(storage).call(auth_strategy:, folder:)
