@@ -142,7 +142,6 @@ import {
   InAppNotificationBellComponent,
   opInAppNotificationBellSelector,
 } from 'core-app/features/in-app-notifications/bell/in-app-notification-bell.component';
-import { IanMenuComponent, ianMenuSelector } from 'core-app/features/in-app-notifications/center/menu/menu.component';
 import {
   opTeamPlannerSidemenuSelector,
   TeamPlannerSidemenuComponent,
@@ -223,7 +222,6 @@ export const globalDynamicComponents:OptionalBootstrapDefinition[] = [
   { selector: editableQueryPropsSelector, cls: EditableQueryPropsComponent },
   { selector: backupSelector, cls: BackupComponent },
   { selector: opInAppNotificationBellSelector, cls: InAppNotificationBellComponent },
-  { selector: ianMenuSelector, cls: IanMenuComponent },
 
   { selector: opModalOverlaySelector, cls: OpModalOverlayComponent },
   { selector: spotDropModalPortalComponentSelector, cls: SpotDropModalPortalComponent },
