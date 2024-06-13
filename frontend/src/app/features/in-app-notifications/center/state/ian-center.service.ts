@@ -73,8 +73,8 @@ import { DeviceService } from 'core-app/core/browser/device.service';
 import { ApiV3ListFilter, ApiV3ListParameters } from 'core-app/core/apiv3/paths/apiv3-list-resource.interface';
 
 export interface INotificationPageQueryParameters {
-  filter?:string;
-  name?:string;
+  filter?:string|null;
+  name?:string|null;
 }
 
 @Injectable({ providedIn: 'root' })
