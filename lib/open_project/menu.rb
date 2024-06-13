@@ -33,13 +33,14 @@ module OpenProject
     MenuGroup = Data.define(:header, :children)
 
     class MenuItem
-      attr_reader :icon, :title, :href, :selected
+      attr_reader :icon, :title, :href, :selected, :count
 
-      def initialize(title:, href:, selected:, icon: :nil)
+      def initialize(title:, href:, selected:, icon: nil, count: nil)
         @title = title
         @href = href
         @selected = selected
         @icon = icon
+        @count = count
       end
     end
   end

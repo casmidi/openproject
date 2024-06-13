@@ -35,6 +35,9 @@
                   <span class="op-sidemenu--item-icon icon-<%= menu_item.icon %>"></span>
                 <% end %>
                 <span class="op-sidemenu--item-title"><%= menu_item.title %></span>
+                <% if menu_item.count %>
+                  <span class="op-bubble op-bubble_alt_highlighting"><%= menu_item.count %></span>
+                <% end %>
               </a>
             </li>
           <% end %>
@@ -67,6 +70,10 @@
                   <span class="op-sidemenu--item-icon icon-<%= child_item.icon %>"></span>
                 <% end %>
                 <span class="op-sidemenu--item-title"><%= child_item.title %></span>
+
+                <% if child_item.count %>
+                  <span class="op-bubble op-bubble_alt_highlighting"><%= child_item.count %></span>
+                <% end %>
               </a>
             </li>
           <% end %>
