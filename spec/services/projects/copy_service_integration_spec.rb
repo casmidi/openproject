@@ -302,6 +302,25 @@ RSpec.describe(
       # rubocop:enable RSpec/ExampleLength
       # rubocop:enable RSpec/MultipleExpectations
 
+      context "with shared work packages" do
+        let(:wp_role) { create(:view_work_package_role) }
+        let!(:source_wp_shared_with_user) do
+          create(:user, member_with_roles: { source_wp => wp_role })
+        end
+
+        it "copies the shared with membership for the work package" do
+          expect(subject).to be_success
+          expect(project_copy.members.count).to eq 2
+
+          shared_wp_member = project_copy.members.find_by(entity_type: "WorkPackage")
+          expect(shared_wp_member.principal).to eq(source_wp_shared_with_user)
+          expect(shared_wp_member.roles).to contain_exactly(wp_role)
+
+          copied_wp = project_copy.work_packages.find_by(subject: "source wp")
+          expect(shared_wp_member.entity).to eq(copied_wp)
+        end
+      end
+
       it_behaves_like "copies public attribute"
       it_behaves_like "copies custom fields"
     end

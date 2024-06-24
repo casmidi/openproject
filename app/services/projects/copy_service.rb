@@ -34,10 +34,10 @@ module Projects
 
     def self.copy_dependencies
       [
+        ::Projects::Copy::WorkPackagesDependentService,
         ::Projects::Copy::MembersDependentService,
         ::Projects::Copy::VersionsDependentService,
         ::Projects::Copy::CategoriesDependentService,
-        ::Projects::Copy::WorkPackagesDependentService,
         ::Projects::Copy::WikiDependentService,
         ::Projects::Copy::ForumsDependentService,
         ::Projects::Copy::QueriesDependentService,

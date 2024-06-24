@@ -61,9 +61,19 @@ module Projects::Copy
                             # It would be better if this was not sneaked in but rather passed in as a parameter.
                             send_notifications: ActionMailer::Base.perform_deliveries)
 
+      set_shared_memberships(attributes)
+
       Members::CreateService
         .new(user: User.current, contract_class: EmptyContract)
         .call(attributes)
+    end
+
+    private
+
+    def set_shared_memberships(attributes)
+      if attributes["entity_type"] == WorkPackage.name
+        attributes["entity_id"] = state.work_package_id_lookup[attributes["entity_id"]].to_s
+      end
     end
   end
 end
