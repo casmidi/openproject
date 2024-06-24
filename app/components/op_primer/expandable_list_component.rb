@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) 2012-2024 the OpenProject GmbH
@@ -25,33 +27,29 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
+#
+module OpPrimer
+  class ExpandableListComponent < Primer::Component
+    include ApplicationHelper
+    include OpTurbo::Streamable
+    include OpPrimer::ComponentHelpers
 
-module Users
-  module Profile
-    class ProjectsComponent < ApplicationComponent
-      include ApplicationHelper
-      include OpTurbo::Streamable
-      include OpPrimer::ComponentHelpers
+    CUTOFF_LIMIT = 10
 
-      def initialize(user:)
-        super()
+    renders_many :elements
 
-        @user = user
-        # show projects based on current user visibility.
-        # But don't simply concatenate the .visible scope to the memberships
-        # as .memberships has an include and an order which for whatever reason
-        # also gets applied to the Project.allowed_to parts concatenated by a UNION
-        # and an order inside a UNION is not allowed in postgres.
-        @memberships = @user.memberships
-                            .where.not(project_id: nil)
-                            .where(id: Member.visible(User.current))
-                            .order("projects.created_at DESC")
+    def initialize(cutoff_limit: CUTOFF_LIMIT,  **system_arguments)
+      super()
 
-      end
+      @system_arguments = deny_tag_argument(**system_arguments)
+      @cutoff_limit = cutoff_limit
+    end
 
-      def render?
-        @memberships.any?
-      end
+    def wrapper_data_attributes
+      {
+        controller: "expandable-list",
+        "application-target": "dynamic"
+      }
     end
   end
 end

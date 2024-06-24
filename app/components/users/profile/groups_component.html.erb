@@ -4,11 +4,13 @@
       <%= render(Primer::Beta::Heading.new(tag: :h4)) { t(:label_group_plural) } %>
     <% end %>
     <%= details_container.with_row(mt: 2) do %>
-      <ul>
-        <% @groups.each do |group| %>
-          <li><%= helpers.link_to_group(group) %></li>
-        <% end %>
-      </ul>
+      <%= render(OpPrimer::ExpandableListComponent.new(cutoff_limit: 5)) do |list|
+        @groups.each do |group|
+          list.with_element do
+            helpers.avatar(group, size: :mini, hide_name: false)
+          end
+        end
+      end %>
     <% end %>
   <% end %>
 <% end %>

@@ -6,13 +6,15 @@
       end
 
       details_container.with_row(mt: 2) do
-        helpers.content_tag(:ul) do
+        render(OpPrimer::ExpandableListComponent.new(cutoff_limit: 5)) do |list|
           @memberships.each do |membership|
-            concat helpers.content_tag(:li, helpers.link_to_project(membership.project))
+            list.with_element do
+              concat helpers.link_to_project(membership.project)
 
-            roles = membership.roles.sort.collect(&:to_s).join(', ')
-            date = helpers.format_date(membership.created_at)
-            concat "(#{roles}, #{date})"
+              roles = membership.roles.sort.collect(&:to_s).join(', ')
+              date = helpers.format_date(membership.created_at)
+              concat render(Primer::Beta::Text.new(ml: 1, color: :subtle, font_size: :small)) { "(#{roles}, #{date})" }
+            end
           end
         end
       end
