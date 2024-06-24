@@ -54,5 +54,7 @@ RSpec.describe "work package hierarchies for milestones", :js, :selenium do
       expect(page).to have_no_text("Create new child")
       expect(page).to have_no_css("wp-inline-create--add-link")
     end
+
+    expect(page).to have_no_text("Children")
   end
 end

@@ -39,6 +39,7 @@ import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 import {
   WorkPackageIsolatedQuerySpaceDirective,
 } from 'core-app/features/work-packages/directives/query-space/wp-isolated-query-space.directive';
+import { SchemaCacheService } from 'core-app/core/schemas/schema-cache.service';
 
 @Component({
   selector: 'wp-relations-hierarchy',
@@ -54,7 +55,7 @@ export class WorkPackageRelationsHierarchyComponent extends UntilDestroyedMixin 
 
   public workPackagePath:string;
 
-  public canHaveChildren:boolean;
+  public canHaveChildren = false;
 
   public canModifyHierarchy:boolean;
 
@@ -62,10 +63,13 @@ export class WorkPackageRelationsHierarchyComponent extends UntilDestroyedMixin 
 
   public childrenQueryProps:any;
 
-  constructor(protected wpRelationsHierarchyService:WorkPackageRelationsHierarchyService,
-    protected apiV3Service:ApiV3Service,
-    protected PathHelper:PathHelperService,
-    readonly I18n:I18nService) {
+  constructor(
+    readonly wpRelationsHierarchyService:WorkPackageRelationsHierarchyService,
+    readonly apiV3Service:ApiV3Service,
+    readonly PathHelper:PathHelperService,
+    readonly I18n:I18nService,
+    readonly schemaCache:SchemaCacheService,
+  ) {
     super();
   }
 
@@ -93,8 +97,10 @@ export class WorkPackageRelationsHierarchyComponent extends UntilDestroyedMixin 
       .pipe(
         this.untilDestroyed(),
       )
-      .subscribe((wp:WorkPackageResource) => {
+      .subscribe((wp) => {
+        const milestone = this.schemaCache.of(wp).isMilestone as boolean;
         this.workPackage = wp;
+        this.canHaveChildren = !milestone;
 
         const parentId = this.workPackage.parent?.id?.toString();
 
