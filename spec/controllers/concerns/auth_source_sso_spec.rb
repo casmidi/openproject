@@ -64,7 +64,7 @@ RSpec.describe MyController, :skip_2fa_stage do
 
       expect(failure).to be_present
       expect(failure[:login]).to eq login
-      expect(failure[:back_url]).to eq "http://test.host/my/account"
+      expect(failure[:back_url]).to eq "http://#{Setting.host_name}/my/account"
       expect(failure[:ttl]).to eq 1
     end
 
@@ -81,7 +81,7 @@ RSpec.describe MyController, :skip_2fa_stage do
         let(:header_value) { nil }
 
         it "redirects to login" do
-          expect(response).to redirect_to("/login?back_url=http%3A%2F%2Ftest.host%2Fmy%2Faccount")
+          expect(response).to redirect_to("/login?back_url=http%3A%2F%2F#{CGI.escape(Setting.host_name)}%2Fmy%2Faccount")
         end
       end
 
@@ -149,7 +149,7 @@ RSpec.describe MyController, :skip_2fa_stage do
       let(:sso_config) { nil }
 
       it "redirects to login" do
-        expect(response).to redirect_to("/login?back_url=http%3A%2F%2Ftest.host%2Fmy%2Faccount")
+        expect(response).to redirect_to("/login?back_url=http%3A%2F%2F#{CGI.escape(Setting.host_name)}%2Fmy%2Faccount")
       end
     end
 

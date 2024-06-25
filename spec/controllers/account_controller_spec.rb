@@ -178,12 +178,12 @@ RSpec.describe AccountController, :skip_2fa_stage do
       end
 
       it "redirects to an absolute path given the same host" do
-        # note: test.host is the hostname during tests
+        # note: #{Setting.host_name} is the hostname during tests
         post :login,
              params: {
                username: admin.login,
                password: "adminADMIN!",
-               back_url: "http://test.host/work_packages/show/1"
+               back_url: "http://#{Setting.host_name}/work_packages/show/1"
              }
         expect(response).to redirect_to "/work_packages/show/1"
       end
@@ -232,7 +232,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
                params: {
                  username: admin.login,
                  password: "adminADMIN!",
-                 back_url: "http://test.host/openproject/work_packages/show/1"
+                 back_url: "http://#{Setting.host_name}/openproject/work_packages/show/1"
                }
           expect(response).to redirect_to "/openproject/work_packages/show/1"
         end
@@ -252,7 +252,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
                params: {
                  username: admin.login,
                  password: "adminADMIN!",
-                 back_url: "http://test.host/foo/work_packages/show/1"
+                 back_url: "http://#{Setting.host_name}/foo/work_packages/show/1"
                }
           expect(response).to redirect_to my_page_path
         end
@@ -272,7 +272,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
                params: {
                  username: admin.login,
                  password: "adminADMIN!",
-                 back_url: "http://test.host/openproject/../foo/work_packages/show/1"
+                 back_url: "http://#{Setting.host_name}/openproject/../foo/work_packages/show/1"
                }
           expect(response).to redirect_to my_page_path
         end
@@ -282,7 +282,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
                params: {
                  username: admin.login,
                  password: "adminADMIN!",
-                 back_url: "//test.host/foo/work_packages/show/1"
+                 back_url: "//#{Setting.host_name}/foo/work_packages/show/1"
                }
           expect(response).to redirect_to my_page_path
         end

@@ -848,7 +848,7 @@ RSpec.describe UsersController do
              password: "psmithPSMITH09",
              password_confirmation: "psmithPSMITH09"
            }
-      expect(response).to redirect_to "/login?back_url=http%3A%2F%2Ftest.host%2Fusers"
+      expect(response).to redirect_to "/login?back_url=http%3A%2F%2F#{CGI.escape(Setting.host_name)}%2Fusers"
     end
   end
 

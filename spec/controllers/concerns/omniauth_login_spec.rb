@@ -306,7 +306,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
 
         context "with a back_url present" do
           before do
-            request.env["omniauth.origin"] = "http://test.host/projects"
+            request.env["omniauth.origin"] = "http://#{Setting.host_name}/projects"
             post :omniauth_login, params: { provider: :google }
           end
 
@@ -317,7 +317,7 @@ RSpec.describe AccountController, :skip_2fa_stage do
 
         context "with a back_url from a login path" do
           before do
-            request.env["omniauth.origin"] = "http://test.host/login"
+            request.env["omniauth.origin"] = "http://#{Setting.host_name}/login"
             post :omniauth_login, params: { provider: :google }
           end
 

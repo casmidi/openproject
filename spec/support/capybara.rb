@@ -21,6 +21,16 @@ RSpec.shared_context "with default_url_options and host name set to Capybara tes
   end
 end
 
+RSpec.shared_context "with host name set to Capybara test server" do
+  around do |example|
+    original_host_setting = Setting.host_name
+    Setting.host_name = "#{Capybara.server_host}:#{Capybara.server_port}"
+    example.run
+  ensure
+    Setting.host_name = original_host_setting
+  end
+end
+
 RSpec.configure do |config|
   Capybara.default_max_wait_time = 4
   Capybara.javascript_driver = :chrome_en
@@ -42,6 +52,8 @@ RSpec.configure do |config|
 
   # Set the default options
   config.include_context "with default_url_options and host name set to Capybara test server", type: :feature
+  config.include_context "with default_url_options and host name set to Capybara test server", type: :request
+  config.include_context "with host name set to Capybara test server", type: :controller
 
   # Make it possible to match on value attribute.
   #

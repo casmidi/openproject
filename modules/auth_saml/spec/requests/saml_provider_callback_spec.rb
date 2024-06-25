@@ -88,7 +88,7 @@ RSpec.describe "SAML provider callback", with_ee: %i[openid_providers] do
 
   it "redirects user when no errors occured" do
     expect(subject.status).to eq(302)
-    expect(subject.headers["Location"]).to eq("http://example.org/two_factor_authentication/request")
+    expect(subject.headers["Location"]).to eq("http://#{Setting.host_name}/two_factor_authentication/request")
   end
 
   context "with an invalid timestamp" do
