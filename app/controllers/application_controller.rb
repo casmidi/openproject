@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
   include ::OpenProject::Authentication::SessionExpiry
   include AdditionalUrlHelpers
   include OpenProjectErrorHelper
+  include Security::Headers
 
   layout "base"
 
@@ -131,7 +132,8 @@ class ApplicationController < ActionController::Base
                payload: ::OpenProject::Logging::ThreadPoolContextBuilder.build!
   end
 
-  before_action :authorization_check_required,
+  before_action :fix_host_header,
+                :authorization_check_required,
                 :user_setup,
                 :set_localization,
                 :tag_request,
@@ -151,7 +153,8 @@ class ApplicationController < ActionController::Base
   def default_url_options(_options = {})
     {
       layout: params["layout"],
-      protocol: Setting.protocol
+      protocol: Setting.protocol,
+      host: Setting.host_name
     }
   end
 
