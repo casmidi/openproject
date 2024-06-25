@@ -55,14 +55,25 @@ module OpenProject::Storages
         [
           OpenProject::Events::MEMBER_CREATED,
           OpenProject::Events::MEMBER_UPDATED,
-          OpenProject::Events::MEMBER_DESTROYED,
-          OpenProject::Events::PROJECT_UPDATED,
-          OpenProject::Events::PROJECT_RENAMED,
-          OpenProject::Events::PROJECT_ARCHIVED,
-          OpenProject::Events::PROJECT_UNARCHIVED
+          OpenProject::Events::MEMBER_DESTROYED
         ].each do |event|
-          OpenProject::Notifications.subscribe(event) do |_payload|
-            ::Storages::ManageStorageIntegrationsJob.debounce
+          OpenProject::Notifications.subscribe(event) do |payload|
+            ::Storages::Storage.joins(project_storages: :project)
+                             .where(project_storages: { project_id: payload[:member].project_id }).find_each do |storage|
+              ::Storages::AutomaticallyManagedStorageSyncJob.debounce(storage)
+            end
+          end
+        end
+
+        [OpenProject::Events::PROJECT_UPDATED,
+         OpenProject::Events::PROJECT_RENAMED,
+         OpenProject::Events::PROJECT_ARCHIVED,
+         OpenProject::Events::PROJECT_UNARCHIVED].each do |event|
+          OpenProject::Notifications.subscribe(event) do |payload|
+            ::Storages::Storage.joins(project_storages: :project)
+                             .where(project_storages: { project: payload[:project] }).find_each do |storage|
+              ::Storages::AutomaticallyManagedStorageSyncJob.debounce(storage)
+            end
           end
         end
 
@@ -97,7 +108,7 @@ module OpenProject::Storages
         ].each do |event|
           OpenProject::Notifications.subscribe(event) do |payload|
             if payload[:project_folder_mode] == :automatic
-              ::Storages::ManageStorageIntegrationsJob.debounce
+              ::Storages::AutomaticallyManagedStorageSyncJob.debounce(payload[:storage])
               ::Storages::ManageStorageIntegrationsJob.disable_cron_job_if_needed
             end
           end
@@ -106,13 +117,13 @@ module OpenProject::Storages
         OpenProject::Notifications.subscribe(
           ::OpenProject::Events::STORAGE_TURNED_UNHEALTHY
         ) do |payload|
-          Storages::HealthService.new(storage: payload[:storage]).unhealthy(reason: payload[:reason])
+          ::Storages::HealthService.new(storage: payload[:storage]).unhealthy(reason: payload[:reason])
         end
 
         OpenProject::Notifications.subscribe(
           ::OpenProject::Events::STORAGE_TURNED_HEALTHY
         ) do |payload|
-          Storages::HealthService.new(storage: payload[:storage]).healthy
+          ::Storages::HealthService.new(storage: payload[:storage]).healthy
         end
       end
     end

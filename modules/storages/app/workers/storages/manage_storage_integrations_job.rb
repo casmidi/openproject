@@ -32,8 +32,6 @@ module Storages
   class ManageStorageIntegrationsJob < ApplicationJob
     include GoodJob::ActiveJobExtensions::Concurrency
 
-    retry_on ::Storages::Errors::IntegrationJobError, attempts: 5
-
     good_job_control_concurrency_with(
       total_limit: 2,
       enqueue_limit: 1,
@@ -41,8 +39,8 @@ module Storages
     )
 
     retry_on GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError,
-             wait: 5.minutes,
-             attempts: 3
+             wait: 5,
+             attempts: 20
 
     SINGLE_THREAD_DEBOUNCE_TIME = 4.seconds.freeze
     KEY = :manage_nextcloud_integration_job_debounce_happened_at
@@ -87,44 +85,8 @@ module Storages
     end
 
     def perform
-      failed_sync = []
-      storage_scope.find_each do |storage|
-        next unless storage.configured?
-
-        result = sync_service_result_for(storage)
-        result.on_success { OpenProject::Notifications.send(OpenProject::Events::STORAGE_TURNED_HEALTHY, storage:) }
-        result.on_failure { |failed| failed_sync << { storage:, errors: failed.errors } }
-      end
-
-      return emit_error_events(failed_sync) if executions >= 5
-
-      raise Errors::IntegrationJobError, failed_sync.first[:errors].to_s if failed_sync.any?
-    end
-
-    private
-
-    def emit_error_events(failed_sync)
-      failed_sync.each do |hash|
-        OpenProject::Notifications.send(OpenProject::Events::STORAGE_TURNED_UNHEALTHY,
-                                        storage: hash[:storage], reason: hash[:errors].to_s)
-      end
-    end
-
-    def storage_scope
-      ::Storages::Storage.automatic_management_enabled.includes(:oauth_client)
-    end
-
-    def sync_service_result_for(storage)
-      # For the sake of making this easier to expand, we should register these and
-      # use the registry to figure out which one to use
-
-      case storage.short_provider_type
-      when "nextcloud"
-        NextcloudGroupFolderPropertiesSyncService.call(storage)
-      when "one_drive"
-        OneDriveManagedFolderSyncService.call(storage)
-      else
-        raise "Unknown Storage Type"
+      Storage.automatic_management_enabled.find_each do |storage|
+        AutomaticallyManagedStorageSyncJob.perform_later(storage)
       end
     end
   end
