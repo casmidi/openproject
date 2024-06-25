@@ -47,7 +47,9 @@ RSpec.configure do |config|
     Capybara.server_host = ip_address
     Capybara.app_host = "http://#{hostname}"
   else
-    Capybara.server_host = ENV.fetch("CAPYBARA_APP_HOSTNAME", "localhost")
+    hostname = ENV.fetch("CAPYBARA_APP_HOSTNAME", "localhost")
+    Capybara.server_host = hostname
+    Capybara.app_host = "http://#{hostname}"
   end
 
   # Set the default options
