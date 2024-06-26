@@ -143,33 +143,6 @@ export class StaticQueriesService {
         },
         view: 'WorkPackagesTable',
       },
-      {
-        title: this.text.all_open,
-        uiSref: 'bim.partitioned.list',
-        uiParams: {
-          query_id: undefined,
-          query_props: '{"c":["id","subject","bcfThumbnail","type","status","assignee","updatedAt"],"t":"id:desc"}',
-        },
-        view: 'Bim',
-      },
-      {
-        title: this.text.latest_activity,
-        uiSref: 'bim.partitioned.list',
-        uiParams: {
-          query_id: undefined,
-          query_props: '{"c":["id","subject","bcfThumbnail","type","status","assignee","updatedAt"],"t":"updatedAt:desc","f":[{"n":"status","o":"o","v":[]}]}',
-        },
-        view: 'Bim',
-      },
-      {
-        title: this.text.recently_created,
-        uiSref: 'bim.partitioned.list',
-        uiParams: {
-          query_id: undefined,
-          query_props: '{"c":["id","subject","bcfThumbnail","type","status","assignee","createdAt"],"t":"createdAt:desc","f":[{"n":"status","o":"o","v":[]}]}',
-        },
-        view: 'Bim',
-      },
     ];
 
     const projectIdentifier = this.CurrentProject.identifier;
@@ -236,24 +209,6 @@ export class StaticQueriesService {
         view: 'WorkPackagesTable',
         isEnterprise: true,
         ...this.eeGuardedShareWithMeRoute,
-      },
-      {
-        title: this.text.created_by_me,
-        uiSref: 'bim.partitioned.list',
-        uiParams: {
-          query_id: undefined,
-          query_props: '{"c":["id","subject","bcfThumbnail","type","status","assignee","updatedAt"],"t":"id:desc","f":[{"n":"status","o":"o","v":[]},{"n":"author","o":"=","v":["me"]}]}',
-        },
-        view: 'Bim',
-      },
-      {
-        title: this.text.assigned_to_me,
-        uiSref: 'bim.partitioned.list',
-        uiParams: {
-          query_id: undefined,
-          query_props: '{"c":["id","subject","bcfThumbnail","type","status","author","updatedAt"],"t":"id:desc","f":[{"n":"status","o":"o","v":[]},{"n":"assigneeOrGroup","o":"=","v":["me"]}]}',
-        },
-        view: 'Bim',
       },
     ];
   }
