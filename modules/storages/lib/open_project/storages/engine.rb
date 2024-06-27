@@ -58,8 +58,7 @@ module OpenProject::Storages
           OpenProject::Events::MEMBER_DESTROYED
         ].each do |event|
           OpenProject::Notifications.subscribe(event) do |payload|
-            ::Storages::Storage.joins(project_storages: :project)
-                             .where(project_storages: { project_id: payload[:member].project_id }).find_each do |storage|
+            ::Storages::Storage.in_project(payload[:member].project_id).find_each do |storage|
               ::Storages::AutomaticallyManagedStorageSyncJob.debounce(storage)
             end
           end
@@ -70,8 +69,7 @@ module OpenProject::Storages
          OpenProject::Events::PROJECT_ARCHIVED,
          OpenProject::Events::PROJECT_UNARCHIVED].each do |event|
           OpenProject::Notifications.subscribe(event) do |payload|
-            ::Storages::Storage.joins(project_storages: :project)
-                             .where(project_storages: { project: payload[:project] }).find_each do |storage|
+            ::Storages::Storage.in_project(payload[:project].id).find_each do |storage|
               ::Storages::AutomaticallyManagedStorageSyncJob.debounce(storage)
             end
           end

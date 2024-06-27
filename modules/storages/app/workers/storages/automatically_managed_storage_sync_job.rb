@@ -1,23 +1,14 @@
+# frozen_string_literal: true
+
 #-- copyright
 #++
 
 module Storages
   class AutomaticallyManagedStorageSyncJob < ApplicationJob
     include GoodJob::ActiveJobExtensions::Concurrency
+    queue_with_priority :above_normal
 
     SINGLE_THREAD_DEBOUNCE_TIME = 4.seconds
-    class << self
-      def debounce(storage)
-        key = "sync-#{storage.short_provider_type}-#{storage.id}"
-        timestamp = RequestStore.store[key]
-
-        return false if timestamp.present? && (timestamp + SINGLE_THREAD_DEBOUNCE_TIME) > Time.current
-
-        result = set(wait: 5.seconds).perform_later(storage)
-        RequestStore.store[key] = Time.current
-        result
-      end
-    end
 
     good_job_control_concurrency_with(
       total_limit: 2,
@@ -33,6 +24,19 @@ module Storages
         OpenProject::Notifications.send(
           OpenProject::Events::STORAGE_TURNED_UNHEALTHY, storage: job.arguments.last, reason: error.message
         )
+      end
+    end
+
+    class << self
+      def debounce(storage)
+        key = "sync-#{storage.short_provider_type}-#{storage.id}"
+        timestamp = RequestStore.store[key]
+
+        return false if timestamp.present? && (timestamp + SINGLE_THREAD_DEBOUNCE_TIME) > Time.current
+
+        result = set(wait: 5.seconds).perform_later(storage)
+        RequestStore.store[key] = Time.current
+        result
       end
     end
 
